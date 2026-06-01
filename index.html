@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital Resilience — Cyber Resilience for Africa</title>
+  <style>
+    :root {
+      --bg: #07090f;
+      --surface: #0d1120;
+      --surface2: #131929;
+      --border: #1e2d4a;
+      --dsg-navy: #0a1628;
+      --dsg-red: #cc1f1f;
+      --dsg-red-bright: #e02020;
+      --accent: #0ea5e9;
+      --accent2: #6366f1;
+      --accent3: #10b981;
+      --danger: #ef4444;
+      --text: #e2e8f0;
+      --muted: #8496b0;
+      --heading: #f0f6ff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%; height: 68px;
+      background: rgba(7,9,15,0.94);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logos { display: flex; align-items: center; gap: 18px; }
+    .nav-logo-dr { height: 38px; width: auto; display: block; }
+    .nav-logo-dsg { height: 32px; width: auto; display: block; filter: brightness(0) invert(1); }
+    .nav-divider { width: 1px; height: 30px; background: var(--border); }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.84rem; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-cta {
+      background: var(--dsg-red); color: #fff; padding: 9px 22px;
+      border-radius: 6px; font-weight: 700; font-size: 0.84rem;
+      text-decoration: none; transition: background .2s;
+    }
+    .nav-cta:hover { background: var(--dsg-red-bright); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh; display: flex; align-items: center;
+      padding: 100px 5% 80px; position: relative; overflow: hidden;
+    }
+    .hero-grid {
+      position: absolute; inset: 0; opacity: 0.06;
+      background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .hero-glow {
+      position: absolute; top: 10%; left: 38%; width: 700px; height: 700px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(14,165,233,0.09) 0%, transparent 70%); pointer-events: none;
+    }
+    .hero-glow2 {
+      position: absolute; bottom: 5%; left: 5%; width: 500px; height: 500px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(204,31,31,0.07) 0%, transparent 70%); pointer-events: none;
+    }
+    .hero-content { position: relative; max-width: 720px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(204,31,31,0.1); border: 1px solid rgba(204,31,31,0.35);
+      color: #f87171; padding: 6px 14px; border-radius: 20px;
+      font-size: 0.75rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; margin-bottom: 24px;
+    }
+    .hero-badge .dot { width: 7px; height: 7px; background: #f87171; border-radius: 50%; animation: pulse 2s infinite; flex-shrink: 0; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+    h1 { font-size: clamp(2.3rem, 4.5vw, 3.6rem); font-weight: 800; line-height: 1.13; color: var(--heading); margin-bottom: 22px; }
+    h1 span { background: linear-gradient(90deg, var(--accent), #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero-sub { font-size: 1.1rem; color: var(--muted); max-width: 580px; margin-bottom: 36px; }
+    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn-primary { background: var(--dsg-red); color: #fff; padding: 13px 28px; border-radius: 8px; font-weight: 700; font-size: 0.95rem; text-decoration: none; transition: background .2s; display: inline-block; }
+    .btn-primary:hover { background: var(--dsg-red-bright); }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); padding: 13px 28px; border-radius: 8px; font-weight: 600; font-size: 0.95rem; text-decoration: none; transition: border-color .2s, color .2s; display: inline-block; }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+    .hero-stats { display: flex; gap: 40px; margin-top: 56px; padding-top: 36px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+    .stat-num { font-size: 2rem; font-weight: 800; color: var(--heading); line-height: 1; }
+    .stat-label { font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
+
+    /* ── TRUST BAR ── */
+    .trust-bar {
+      background: var(--dsg-navy); border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 18px 5%; display: flex; align-items: center; justify-content: center; gap: 36px; flex-wrap: wrap;
+    }
+    .trust-bar-label { font-size: 0.7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); flex-shrink: 0; }
+    .trust-items { display: flex; align-items: center; gap: 32px; flex-wrap: wrap; justify-content: center; }
+    .trust-item { color: #94a3b8; font-size: 0.81rem; font-weight: 600; display: flex; align-items: center; gap: 7px; }
+
+    /* ── SECTIONS ── */
+    section { padding: 96px 5%; }
+    .section-label { font-size: 0.72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--dsg-red); margin-bottom: 12px; }
+    h2 { font-size: clamp(1.7rem, 3vw, 2.4rem); font-weight: 800; color: var(--heading); margin-bottom: 16px; }
+    .section-sub { font-size: 1rem; color: var(--muted); max-width: 640px; margin-bottom: 56px; }
+    .divider { height: 1px; background: var(--border); }
+
+    /* ── DSG SECTION ── */
+    .dsg-section { background: var(--dsg-navy); border-top: 1px solid rgba(204,31,31,0.2); border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .dsg-section .section-label { color: #f87171; }
+    .dsg-hero-logos { display: flex; align-items: center; gap: 20px; margin-bottom: 36px; }
+    .dsg-hero-logos img.dsg-big { height: 56px; width: auto; }
+    .dsg-logo-divider { width: 1px; height: 44px; background: rgba(255,255,255,0.12); }
+    .dsg-hero-logos img.dr-big { height: 44px; width: auto; }
+    .dsg-layout { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 64px; align-items: start; }
+    @media(max-width:800px){ .dsg-layout { grid-template-columns: 1fr; } }
+    .dsg-content h2 { color: #fff; margin-bottom: 20px; }
+    .dsg-content p { font-size: 0.92rem; color: #94a3b8; line-height: 1.75; margin-bottom: 16px; }
+    .dsg-content p strong { color: #e2e8f0; }
+    .dsg-stat-row { display: flex; gap: 36px; margin-top: 32px; padding-top: 28px; border-top: 1px solid rgba(255,255,255,0.08); flex-wrap: wrap; }
+    .dsg-stat .num { font-size: 2rem; font-weight: 900; color: var(--dsg-red-bright); }
+    .dsg-stat .lbl { font-size: 0.76rem; color: #64748b; margin-top: 3px; }
+    .dsg-divisions h3 { font-size: 0.92rem; font-weight: 700; color: #cbd5e1; margin-bottom: 18px; letter-spacing: .02em; }
+    .division-list { display: flex; flex-direction: column; gap: 10px; }
+    .div-item { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 13px 18px; transition: border-color .2s, background .2s; }
+    .div-item:hover { border-color: rgba(204,31,31,0.35); background: rgba(204,31,31,0.04); }
+    .div-item.active { border-color: rgba(204,31,31,0.4); background: rgba(204,31,31,0.07); }
+    .div-name { font-weight: 700; font-size: 0.88rem; color: #e2e8f0; margin-bottom: 2px; display: flex; align-items: center; gap: 8px; }
+    .div-active-badge { font-size: 0.62rem; background: rgba(204,31,31,0.2); color: #fca5a5; border: 1px solid rgba(204,31,31,0.4); padding: 2px 8px; border-radius: 10px; font-weight: 700; }
+    .div-desc { font-size: 0.77rem; color: #64748b; }
+
+    /* ── THREAT LANDSCAPE ── */
+    .threat-section { background: var(--surface); }
+    .threat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 40px; }
+    .threat-stat { background: var(--bg); padding: 32px 26px; transition: background .2s; }
+    .threat-stat:hover { background: var(--surface2); }
+    .threat-num { font-size: 2.3rem; font-weight: 900; line-height: 1; margin-bottom: 8px; }
+    .threat-num.red { color: var(--dsg-red-bright); }
+    .threat-num.amber { color: #f59e0b; }
+    .threat-num.blue { color: var(--accent); }
+    .threat-num.purple { color: #a78bfa; }
+    .threat-stat-label { font-size: 0.83rem; color: var(--muted); line-height: 1.5; }
+    .threat-callout { background: rgba(204,31,31,0.06); border: 1px solid rgba(204,31,31,0.22); border-radius: 12px; padding: 24px 28px; display: flex; align-items: flex-start; gap: 16px; }
+    .threat-callout-icon { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
+    .threat-callout h3 { font-size: 1rem; font-weight: 700; color: var(--heading); margin-bottom: 6px; }
+    .threat-callout p { font-size: 0.86rem; color: var(--muted); line-height: 1.65; }
+
+    /* ── COST OF INACTION ── */
+    .inaction-section { background: linear-gradient(135deg, rgba(204,31,31,0.04), rgba(245,158,11,0.03)); border-top: 1px solid rgba(204,31,31,0.12); border-bottom: 1px solid rgba(204,31,31,0.12); }
+    .inaction-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .inaction-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; position: relative; overflow: hidden; }
+    .inaction-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--dsg-red), #f59e0b); }
+    .inaction-card h3 { font-size: 1rem; font-weight: 700; color: var(--heading); margin-bottom: 10px; }
+    .inaction-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.65; }
+    .inaction-card .cost { font-size: 1.3rem; font-weight: 900; color: var(--dsg-red-bright); margin-bottom: 8px; }
+
+    /* ── WHY US ── */
+    .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+    .why-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; transition: border-color .25s, transform .2s; }
+    .why-card:hover { border-color: rgba(14,165,233,0.4); transform: translateY(-3px); }
+    .why-icon { width: 46px; height: 46px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 16px; }
+    .why-card h3 { font-size: 1rem; font-weight: 700; color: var(--heading); margin-bottom: 8px; }
+    .why-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.65; }
+
+    /* ── HOW WE WORK ── */
+    .how-section { background: var(--surface); }
+    .how-steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; }
+    @media(max-width:900px){ .how-steps { grid-template-columns: 1fr 1fr; } }
+    @media(max-width:500px){ .how-steps { grid-template-columns: 1fr; } }
+    .how-step { padding: 32px 20px; text-align: center; position: relative; }
+    .how-step:not(:last-child)::after { content: '→'; position: absolute; right: -8px; top: 38px; font-size: 1.2rem; color: rgba(255,255,255,0.1); }
+    @media(max-width:900px){ .how-step:not(:last-child)::after { display: none; } }
+    .step-num { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, var(--dsg-red), #7c3aed); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.1rem; color: #fff; margin: 0 auto 16px; box-shadow: 0 0 0 8px rgba(204,31,31,0.08); }
+    .how-step h3 { font-size: 0.92rem; font-weight: 700; color: var(--heading); margin-bottom: 8px; }
+    .how-step p { font-size: 0.8rem; color: var(--muted); line-height: 1.55; }
+
+    /* ── SOLUTIONS ── */
+    .solutions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+    .sol-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; position: relative; overflow: hidden; transition: border-color .25s, transform .2s; }
+    .sol-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--dsg-red), var(--accent2)); opacity: 0; transition: opacity .25s; }
+    .sol-card:hover { border-color: rgba(204,31,31,0.35); transform: translateY(-3px); }
+    .sol-card:hover::before { opacity: 1; }
+    .sol-icon { font-size: 28px; margin-bottom: 14px; }
+    .sol-card h3 { font-size: 1rem; font-weight: 700; color: var(--heading); margin-bottom: 8px; }
+    .sol-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.65; }
+    .sol-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+    .tag { background: rgba(204,31,31,0.08); border: 1px solid rgba(204,31,31,0.2); color: #fca5a5; font-size: 0.7rem; font-weight: 600; padding: 3px 9px; border-radius: 4px; }
+
+    /* ── USE CASES ── */
+    .uc-section { background: var(--surface); }
+    .use-cases-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
+    .uc-card { background: var(--bg); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; transition: border-color .25s, transform .2s; }
+    .uc-card:hover { border-color: rgba(14,165,233,0.3); transform: translateY(-3px); }
+    .uc-header { padding: 22px 24px 18px; border-bottom: 1px solid var(--border); }
+    .uc-icon { font-size: 26px; margin-bottom: 10px; }
+    .uc-header h3 { font-size: 0.97rem; font-weight: 700; color: var(--heading); line-height: 1.4; }
+    .uc-body { padding: 20px 24px; }
+    .uc-label { font-size: 0.68rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; margin-top: 14px; }
+    .uc-label:first-child { margin-top: 0; }
+    .uc-body p { font-size: 0.84rem; color: var(--muted); line-height: 1.65; }
+    .uc-outcome { background: rgba(16,185,129,0.07); border: 1px solid rgba(16,185,129,0.2); border-radius: 8px; padding: 12px 14px; margin-top: 16px; font-size: 0.83rem; color: #6ee7b7; }
+    .uc-outcome strong { display: block; font-size: 0.66rem; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 4px; opacity: .7; }
+
+    /* ── PARTNERS ── */
+    .partners-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+    .partner-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      overflow: hidden; transition: border-color .25s, transform .2s;
+      display: flex; flex-direction: column;
+    }
+    .partner-card:hover { border-color: rgba(204,31,31,0.35); transform: translateY(-3px); }
+    .partner-logo-wrap {
+      background: #fff; padding: 20px 24px; display: flex;
+      align-items: center; justify-content: center; min-height: 80px;
+      border-bottom: 1px solid var(--border);
+    }
+    .partner-logo-wrap img {
+      max-height: 44px; max-width: 160px; width: auto; height: auto;
+      object-fit: contain; display: block;
+    }
+    .partner-logo-wrap .partner-wordmark {
+      font-weight: 800; font-size: 1.3rem; color: #1e293b;
+      letter-spacing: -.02em; text-align: center;
+    }
+    .partner-body { padding: 18px 20px; flex: 1; }
+    .partner-focus { font-size: 0.72rem; color: #f87171; font-weight: 700; margin-bottom: 8px; letter-spacing: .03em; }
+    .partner-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── CTA ── */
+    .cta-section { text-align: center; padding: 100px 5%; background: var(--dsg-navy); border-top: 1px solid rgba(204,31,31,0.2); }
+    .cta-section h2 { color: #fff; margin-bottom: 14px; }
+    .cta-section p { color: #94a3b8; font-size: 1.05rem; margin-bottom: 36px; max-width: 520px; margin-left: auto; margin-right: auto; }
+    .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .cta-section .section-label { color: #f87171; }
+
+    /* ── FOOTER ── */
+    footer { padding: 36px 5%; text-align: center; background: #050710; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--border); }
+    footer a { color: var(--accent); text-decoration: none; }
+    .footer-logos { display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 14px; flex-wrap: wrap; }
+    .footer-logos img.f-dr { height: 36px; width: auto; }
+    .footer-logos img.f-dsg { height: 28px; width: auto; filter: brightness(0) invert(0.4); }
+    .footer-div { width: 1px; height: 24px; background: var(--border); }
+    .footer-dsg { font-size: 0.72rem; opacity: .4; margin-top: 10px; }
+
+    @media(max-width:640px){ .nav-links { display: none; } .hero-stats { gap: 24px; } }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logos">
+    <img class="nav-logo-dr" src="Digital Resilience Logo.png" alt="Digital Resilience" />
+    <div class="nav-divider"></div>
+    <img class="nav-logo-dsg" src="DSG_Logo_RED.png" alt="Digital Solutions Group" />
+  </div>
+  <div class="nav-links">
+    <a href="#dsg">About DSG</a>
+    <a href="#threat">Threat Landscape</a>
+    <a href="#solutions">Solutions</a>
+    <a href="#usecases">Use Cases</a>
+    <a href="#partners">Partners</a>
+  </div>
+  <a class="nav-cta" href="#contact">Get a Risk Assessment</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-content">
+    <div class="hero-badge"><div class="dot"></div>South Africa's Leading Cyber Resilience Partner</div>
+    <h1>Your Business Is Under Attack. <span>We Make Sure It Survives.</span></h1>
+    <p class="hero-sub">One unified partner. Eleven world-class platforms. 24/7 Security Operations — backed by 27 years of African enterprise expertise. We protect what drives your business forward so you can focus on growth, not risk.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="#threat">See the Threat Reality</a>
+      <a class="btn-outline" href="#solutions">Our Solutions</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item"><div class="stat-num">24/7</div><div class="stat-label">Security Operations Centre</div></div>
+      <div class="stat-item"><div class="stat-num">11</div><div class="stat-label">Global Technology Partners</div></div>
+      <div class="stat-item"><div class="stat-num">27+</div><div class="stat-label">Years Enterprise Delivery</div></div>
+      <div class="stat-item"><div class="stat-num">POPIA</div><div class="stat-label">Aligned &amp; Compliant</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <span class="trust-bar-label">Trusted Across</span>
+  <div class="trust-items">
+    <div class="trust-item">🏦 Financial Services</div>
+    <div class="trust-item">📡 Telecommunications</div>
+    <div class="trust-item">🛒 Retail &amp; Commerce</div>
+    <div class="trust-item">🏭 Manufacturing &amp; OT</div>
+    <div class="trust-item">🏛 Public Sector</div>
+    <div class="trust-item">🌍 Pan-African Operations</div>
+  </div>
+</div>
+
+<!-- DSG ABOUT -->
+<section class="dsg-section" id="dsg">
+  <div class="section-label">Our Foundation</div>
+  <div class="dsg-hero-logos">
+    <img class="dsg-big" src="DSG_Logo_RED.png" alt="Digital Solutions Group" />
+    <div class="dsg-logo-divider"></div>
+    <img class="dr-big" src="Digital Resilience Logo.png" alt="Digital Resilience" />
+  </div>
+  <div class="dsg-layout">
+    <div class="dsg-content">
+      <h2>Backed by 27 Years of African Enterprise Delivery</h2>
+      <p>Digital Resilience is the cybersecurity division of <strong>Digital Solutions Group (DSG)</strong> — a South African enterprise digital partner founded in 1998 and trusted by leading organisations across Africa for over a quarter century.</p>
+      <p>DSG has built its reputation on something rare in technology: long-term accountability. Deep technical expertise, stable client partnerships, and the ability to operate at scale across complex enterprise environments. That heritage gives Digital Resilience something most pure-play security vendors simply cannot offer — the organisational depth, financial stability, and cross-domain knowledge of a proven enterprise delivery partner.</p>
+      <p>When you engage Digital Resilience, you are not onboarding a startup or a reseller. You are partnering with a business that has spent nearly three decades earning the trust of African enterprises.</p>
+      <div class="dsg-stat-row">
+        <div class="dsg-stat"><div class="num">1998</div><div class="lbl">Founded</div></div>
+        <div class="dsg-stat"><div class="num">27+</div><div class="lbl">Years Enterprise Delivery</div></div>
+        <div class="dsg-stat"><div class="num">7</div><div class="lbl">Specialist Divisions</div></div>
+      </div>
+    </div>
+    <div class="dsg-divisions">
+      <h3>DSG's Seven Business Divisions</h3>
+      <div class="division-list">
+        <div class="div-item active">
+          <div class="div-name">Digital Resilience <span class="div-active-badge">You Are Here</span></div>
+          <div class="div-desc">Managed cyber resilience — security operations, compliance, and human risk</div>
+        </div>
+        <div class="div-item"><div class="div-name">CXG</div><div class="div-desc">Omnichannel contact centres and customer engagement solutions</div></div>
+        <div class="div-item"><div class="div-name">MVNE</div><div class="div-desc">Mobile Virtual Network Enabler for brands and retailers</div></div>
+        <div class="div-item"><div class="div-name">Broadbrand</div><div class="div-desc">Performance marketing and creative automation</div></div>
+        <div class="div-item"><div class="div-name">Digitalise</div><div class="div-desc">Digital transformation consulting and systems integration</div></div>
+        <div class="div-item"><div class="div-name">EInsurer</div><div class="div-desc">Cyber insurance and digital risk platforms</div></div>
+        <div class="div-item"><div class="div-name">DigitalMall</div><div class="div-desc">Marketplace, payments, and fulfilment</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THREAT LANDSCAPE -->
+<section class="threat-section" id="threat">
+  <div class="section-label">The Threat Reality</div>
+  <h2>The Attack Surface Has Never Been Larger</h2>
+  <p class="section-sub">African organisations are prime targets. The question is no longer <em>if</em> you will be attacked — it is whether you will be ready when it happens.</p>
+  <div class="threat-grid">
+    <div class="threat-stat"><div class="threat-num red">$4.9M</div><div class="threat-stat-label">Average global cost of a single data breach in 2024</div></div>
+    <div class="threat-stat"><div class="threat-num amber">2,200+</div><div class="threat-stat-label">Cyberattacks every single day — one every 39 seconds</div></div>
+    <div class="threat-stat"><div class="threat-num blue">74%</div><div class="threat-stat-label">Of all breaches involve a human element — phishing, credentials, or error</div></div>
+    <div class="threat-stat"><div class="threat-num purple">277 days</div><div class="threat-stat-label">Average time to identify and contain a breach without a SOC</div></div>
+    <div class="threat-stat"><div class="threat-num red">R2.8B</div><div class="threat-stat-label">Estimated annual cost of cybercrime to South African businesses</div></div>
+    <div class="threat-stat"><div class="threat-num amber">3rd</div><div class="threat-stat-label">Africa ranks 3rd globally for targeted cyberattacks — and rising</div></div>
+  </div>
+  <div class="threat-callout">
+    <div class="threat-callout-icon">⚠️</div>
+    <div>
+      <h3>POPIA Changes Everything for South African Businesses</h3>
+      <p>The Protection of Personal Information Act carries fines of up to R10 million and criminal liability for responsible parties. A breach is no longer just an IT problem — it is a board-level legal and financial exposure. Most organisations are still not adequately prepared.</p>
+    </div>
+  </div>
+</section>
+
+<!-- COST OF INACTION -->
+<section class="inaction-section">
+  <div class="section-label">Cost of Inaction</div>
+  <h2>What Happens When You're Not Ready</h2>
+  <p class="section-sub">The cost of a breach far exceeds the cost of prevention. Here is what organisations that delay action typically face.</p>
+  <div class="inaction-grid">
+    <div class="inaction-card"><div class="cost">Operational Shutdown</div><h3>Business Disruption</h3><p>Ransomware can take an organisation offline for days or weeks. Every hour of downtime carries a direct revenue cost — plus recovery, forensics, and remediation expenses on top.</p></div>
+    <div class="inaction-card"><div class="cost">Up to R10M in Fines</div><h3>Regulatory Penalties</h3><p>POPIA, PCI-DSS, and sector-specific regulations carry significant financial penalties for inadequate data protection. Regulators are increasingly active in enforcement across South Africa.</p></div>
+    <div class="inaction-card"><div class="cost">Permanent Brand Damage</div><h3>Customer &amp; Reputational Loss</h3><p>60% of organisations that suffer a significant breach lose major clients within a year. The reputational cost with customers, investors, and partners can outlast any technical recovery.</p></div>
+    <div class="inaction-card"><div class="cost">Third-Party Liability</div><h3>Supply Chain Exposure</h3><p>Your security posture is only as strong as your weakest supplier. Attackers increasingly target vendors to access their larger clients — and your organisation may bear the liability for that breach.</p></div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section id="why">
+  <div class="section-label">Why Digital Resilience</div>
+  <h2>One Partner. Complete Coverage. Full Accountability.</h2>
+  <p class="section-sub">Most organisations are juggling 10+ disconnected security tools with no unified ownership. We eliminate that complexity — and the dangerous gaps it creates.</p>
+  <div class="why-grid">
+    <div class="why-card"><div class="why-icon" style="background:rgba(204,31,31,0.1);">🎯</div><h3>One Accountable Partner</h3><p>Unified SLAs across every capability. No vendor finger-pointing. One escalation path when something goes wrong — us.</p></div>
+    <div class="why-card"><div class="why-icon" style="background:rgba(14,165,233,0.1);">🌍</div><h3>Built for Africa</h3><p>POPIA-aligned governance, local staffing across SA and SADC, and contextual expertise that global vendors simply lack on this continent.</p></div>
+    <div class="why-card"><div class="why-icon" style="background:rgba(16,185,129,0.1);">🏆</div><h3>Global-Grade Platforms</h3><p>Gartner Leaders, MITRE ATT&CK evaluees, and award-winning tools — deployed and operated by certified experts on your behalf.</p></div>
+    <div class="why-card"><div class="why-icon" style="background:rgba(245,158,11,0.1);">⚡</div><h3>Managed, Not Bolted On</h3><p>We don't sell licences and walk away. Our team actively monitors, responds, and continuously improves your security posture around the clock.</p></div>
+    <div class="why-card"><div class="why-icon" style="background:rgba(99,102,241,0.1);">🔗</div><h3>Integrated by Design</h3><p>IT, network, and behavioural security working in concert — eliminating the blind spots that siloed tools and disconnected vendors create.</p></div>
+    <div class="why-card"><div class="why-icon" style="background:rgba(14,165,233,0.1);">📋</div><h3>Compliance-Ready</h3><p>ISO 27001, POPIA, PCI-DSS, and NIST mapped to practical, operable controls — so your regulatory obligations and your security programme speak the same language.</p></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- HOW WE WORK -->
+<section class="how-section" id="how">
+  <div class="section-label">Our Approach</div>
+  <h2>From Day One to Always On</h2>
+  <p class="section-sub">A structured, proven journey from understanding your risk to continuously defending against it.</p>
+  <div class="how-steps">
+    <div class="how-step"><div class="step-num">1</div><h3>Risk Assessment</h3><p>We understand your current posture — assets, gaps, compliance obligations, and highest-priority risk exposures.</p></div>
+    <div class="how-step"><div class="step-num">2</div><h3>Solution Design</h3><p>Tailored capability stack from our 9 integrated services — scoped to your business, sector, and risk profile.</p></div>
+    <div class="how-step"><div class="step-num">3</div><h3>Deployment</h3><p>Engineers deploy and integrate across endpoints, cloud, email, network, and identity — full visibility from day one.</p></div>
+    <div class="how-step"><div class="step-num">4</div><h3>24/7 Monitoring</h3><p>Our SOC detects, investigates, and responds. Threats are contained before they become incidents.</p></div>
+    <div class="how-step"><div class="step-num">5</div><h3>Continuous Improvement</h3><p>Regular threat reviews, posture reporting, compliance updates, and vCISO guidance keep defences ahead of the landscape.</p></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SOLUTIONS -->
+<section id="solutions">
+  <div class="section-label">Our Capabilities</div>
+  <h2>Nine Integrated Solutions</h2>
+  <p class="section-sub">Every layer of your security estate, covered by specialists and driven by the world's best platforms — deployed as a unified service.</p>
+  <div class="solutions-grid">
+    <div class="sol-card"><div class="sol-icon">🔍</div><h3>Managed Security (SOC)</h3><p>24/7 managed detection and response powered by human analysts and AI-driven platforms. We detect, investigate, and respond before threats become breaches.</p><div class="sol-tags"><span class="tag">MDR</span><span class="tag">24/7 SOC</span><span class="tag">Incident Response</span></div></div>
+    <div class="sol-card"><div class="sol-icon">👔</div><h3>vCISO Service</h3><p>Fractional CISO leadership for organisations that need strategic security governance without the cost of a full-time executive. Roadmaps, board reporting, policy, and risk ownership.</p><div class="sol-tags"><span class="tag">Governance</span><span class="tag">Risk Strategy</span><span class="tag">Board Reporting</span></div></div>
+    <div class="sol-card"><div class="sol-icon">💻</div><h3>Endpoint Security</h3><p>Best-in-class endpoint protection powered by Bitdefender — consistently top-ranked in MITRE ATT&CK and AV-Comparatives. Servers, laptops, cloud workloads, and mobile.</p><div class="sol-tags"><span class="tag">Bitdefender</span><span class="tag">EDR</span><span class="tag">Cloud Security</span></div></div>
+    <div class="sol-card"><div class="sol-icon">📊</div><h3>SIEM &amp; XDR</h3><p>Unified threat detection across endpoints, cloud, identity, and network — correlated in real time with automated investigation and Agentic AI response workflows.</p><div class="sol-tags"><span class="tag">Securonix</span><span class="tag">UEBA</span><span class="tag">SOAR</span><span class="tag">Agentic AI</span></div></div>
+    <div class="sol-card"><div class="sol-icon">⚔️</div><h3>Offensive Security</h3><p>Penetration testing, red teaming, and continuous vulnerability management. We find your weaknesses before attackers do — with a prioritised remediation plan.</p><div class="sol-tags"><span class="tag">Pen Testing</span><span class="tag">Tenable</span><span class="tag">Vuln Management</span></div></div>
+    <div class="sol-card"><div class="sol-icon">📧</div><h3>Email &amp; Network Defence</h3><p>Advanced threat protection and DMARC implementation stopping phishing, BEC, and impersonation attacks at the perimeter — before they reach your people.</p><div class="sol-tags"><span class="tag">ATP</span><span class="tag">DMARC</span><span class="tag">Anti-Phishing</span></div></div>
+    <div class="sol-card"><div class="sol-icon">🔒</div><h3>Data Protection &amp; Privacy</h3><p>DLP and POPIA-aligned governance frameworks to protect sensitive data, manage subject access requests, and demonstrate compliance to regulators and customers.</p><div class="sol-tags"><span class="tag">DLP</span><span class="tag">POPIA</span><span class="tag">Data Governance</span></div></div>
+    <div class="sol-card"><div class="sol-icon">🧠</div><h3>Human Risk &amp; Awareness</h3><p>Behaviour-change programmes using psychographic segmentation and gamification — because your people are both your greatest risk and your strongest line of defence.</p><div class="sol-tags"><span class="tag">OutThink</span><span class="tag">Beauceron</span><span class="tag">Phishing Sim</span></div></div>
+    <div class="sol-card"><div class="sol-icon">📋</div><h3>Compliance &amp; Risk</h3><p>End-to-end GRC support aligned to ISO 27001, POPIA, PCI-DSS, and NIST — translating regulatory requirements into practical controls your business can operate and evidence.</p><div class="sol-tags"><span class="tag">ISO 27001</span><span class="tag">PCI-DSS</span><span class="tag">GRC</span></div></div>
+  </div>
+</section>
+
+<!-- USE CASES -->
+<section class="uc-section" id="usecases">
+  <div class="section-label">Use Cases</div>
+  <h2>The Problems We Solve</h2>
+  <p class="section-sub">Recognise any of these? These are the most common security challenges our clients bring to us — and how we resolve them.</p>
+  <div class="use-cases-grid">
+    <div class="uc-card">
+      <div class="uc-header"><div class="uc-icon">🔐</div><h3>"We Had a Near-Miss. We Can't Be This Exposed Again."</h3></div>
+      <div class="uc-body">
+        <div class="uc-label">The Challenge</div><p>An organisation relying on legacy AV with no 24/7 monitoring experienced a near-miss ransomware event. Leadership demanded a complete rethink of detection and response — fast.</p>
+        <div class="uc-label">Our Approach</div><p>Deployed ZeroDwell Containment at the endpoint — isolating unknown processes before execution — combined with our 24/7 SOC for real-time investigation and response.</p>
+        <div class="uc-outcome"><strong>Outcome</strong>Zero successful ransomware executions post-deployment. Mean time to detect reduced from days to under 8 minutes.</div>
+      </div>
+    </div>
+    <div class="uc-card">
+      <div class="uc-header"><div class="uc-icon">🏢</div><h3>"We Have No Visibility Into Our Suppliers' Security."</h3></div>
+      <div class="uc-body">
+        <div class="uc-label">The Challenge</div><p>Hundreds of technology vendors with no systematic way to assess their cyber posture — creating significant regulatory exposure and supply chain risk.</p>
+        <div class="uc-label">Our Approach</div><p>Deployed Third-Party Cyber Risk Intelligence with continuous vendor rating, Ransomware Susceptibility Indexing, and automated alerts on supplier posture changes.</p>
+        <div class="uc-outcome"><strong>Outcome</strong>Full vendor risk visibility within 30 days. High-risk suppliers identified and remediation mandated before any incident occurred.</div>
+      </div>
+    </div>
+    <div class="uc-card">
+      <div class="uc-header"><div class="uc-icon">📜</div><h3>"Our Audit Is Coming and We're Not Ready."</h3></div>
+      <div class="uc-body">
+        <div class="uc-label">The Challenge</div><p>An imminent compliance audit with poor data classification, inadequate logging, and no clear process for managing sensitive data — risking failure and regulatory penalty.</p>
+        <div class="uc-label">Our Approach</div><p>DLP controls, SIEM with compliance-specific correlation rules, and vCISO oversight driving a structured programme with automated evidence collection.</p>
+        <div class="uc-outcome"><strong>Outcome</strong>Full compliance achieved within 6 months. Audit preparation time reduced by 70%.</div>
+      </div>
+    </div>
+    <div class="uc-card">
+      <div class="uc-header"><div class="uc-icon">📋</div><h3>"We Hold Sensitive Data With No Formal Protection Programme."</h3></div>
+      <div class="uc-body">
+        <div class="uc-label">The Challenge</div><p>Large volumes of personal information, no appointed Information Officer, and unclear data flows — a serious POPIA liability with no remediation plan in place.</p>
+        <div class="uc-label">Our Approach</div><p>Full POPIA gap assessment, data governance framework, DLP implementation, and ongoing vCISO support acting as a virtual Information Officer.</p>
+        <div class="uc-outcome"><strong>Outcome</strong>POPIA-compliant programme established in 4 months. Breach response and regulator notification procedures formally documented.</div>
+      </div>
+    </div>
+    <div class="uc-card">
+      <div class="uc-header"><div class="uc-icon">🏭</div><h3>"Our OT Environment Is Growing With Zero Security Visibility."</h3></div>
+      <div class="uc-body">
+        <div class="uc-label">The Challenge</div><p>Expanding IT/OT connectivity with legacy industrial systems — no asset inventory, no patching cadence, and no incident response capability in the operational environment.</p>
+        <div class="uc-label">Our Approach</div><p>Continuous OT asset discovery and vulnerability assessment integrated into our SOC for unified IT/OT threat monitoring and remediation prioritisation.</p>
+        <div class="uc-outcome"><strong>Outcome</strong>Complete OT asset inventory achieved for the first time. 47 critical vulnerabilities remediated proactively before any incident.</div>
+      </div>
+    </div>
+    <div class="uc-card">
+      <div class="uc-header"><div class="uc-icon">👥</div><h3>"Our People Keep Clicking the Wrong Things."</h3></div>
+      <div class="uc-body">
+        <div class="uc-label">The Challenge</div><p>Repeated incidents driven by employee behaviour — phishing clicks, data mishandling, and security bypasses — despite mandatory annual training that clearly wasn't working.</p>
+        <div class="uc-label">Our Approach</div><p>Human Risk Management with psychographic profiling targeting highest-risk users with personalised interventions, real-world phishing simulations, and UEBA monitoring.</p>
+        <div class="uc-outcome"><strong>Outcome</strong>Phishing click-through rate reduced by 68% in 90 days. High-risk user cohort halved within 6 months.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PARTNERS -->
+<section id="partners">
+  <div class="section-label">Technology Partners</div>
+  <h2>Powered by the World's Best Platforms</h2>
+  <p class="section-sub">We partner with the world's top-ranked security vendors — giving our clients enterprise-grade technology without the procurement, integration, and management overhead.</p>
+  <div class="partners-grid">
+
+    <div class="partner-card">
+      <div class="partner-logo-wrap">
+        <img src="https://logo.clearbit.com/bitdefender.com" alt="Bitdefender" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+        <div class="partner-wordmark" style="display:none;color:#e4001e;">Bitdefender</div>
+      </div>
+      <div class="partner-body">
+        <div class="partner-focus">Endpoint · XDR · MDR · Cloud Security</div>
+        <div class="partner-desc">Top-ranked in MITRE ATT&CK, AV-Comparatives, and AV-TEST for over a decade. Unified XDR across every security layer.</div>
+      </div>
+    </div>
+
+    <div class="partner-card">
+      <div class="partner-logo-wrap">
+        <img src="https://logo.clearbit.com/securonix.com" alt="Securonix" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+        <div class="partner-wordmark" style="display:none;color:#0a2f6e;">Securonix</div>
+      </div>
+      <div class="partner-body">
+        <div class="partner-focus">SIEM · UEBA · SOAR · Agentic AI</div>
+        <div class="partner-desc">Gartner SIEM Magic Quadrant Leader — six consecutive years. Agentic AI analyst for autonomous threat investigation.</div>
+      </div>
+    </div>
+
+    <div class="partner-card">
+      <div class="partner-logo-wrap">
+        <img src="https://logo.clearbit.com/xcitium.com" alt="Xcitium" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+        <div class="partner-wordmark" style="display:none;color:#5b2d8e;">Xcitium</div>
+      </div>
+      <div class="partner-body">
+        <div class="partner-focus">Zero Trust · ZeroDwell · XDR · CNAPP</div>
+        <div class="partner-desc">Patented kernel-level containment isolating unknown threats before they execute. AVLAB Product of the Year 2025.</div>
+      </div>
+    </div>
+
+    <div class="partner-card">
+      <div class="partner-logo-wrap">
+        <img src="https://logo.clearbit.com/blackkite.com" alt="Black Kite" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+        <div class="partner-wordmark" style="display:none;color:#1a1a2e;">Black Kite</div>
+      </div>
+      <div class="partner-body">
+        <div class="partner-focus">Third-Party Cyber Risk Intelligence</div>
+        <div class="partner-desc">Cyber Ratings and Ransomware Susceptibility Index for your entire supplier ecosystem — continuous and financial-grade.</div>
+      </div>
+    </div>
+
+    <div class="partner-card">
+      <div class="partner-logo-wrap">
+        <img src="https://logo.clearbit.com/outthink.io" alt="OutThink" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+        <div class="partner-wordmark" style="display:none;color:#00b8d4;">OutThink</div>
+      </div>
+      <div class="partner-body">
+        <div class="partner-focus">Human Risk Management</div>
+        <div class="partner-desc">Psychographic segmentation for personalised security training. Real-world phishing simulations that change behaviour.</div>
+      </div>
+    </div>
+
+    <div class="partner-card">
+      <div class="partner-logo-wrap">
+        <img src="https://logo.clearbit.com/beauceron.net" alt="Beauceron Security" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+        <div class="partner-wordmark" style="display:none;color:#2c3e7a;">Beauceron</div>
+      </div>
+      <div class="partner-body">
+        <div class="partner-focus">Human Risk · Culture · Awareness</div>
+        <div class="partner-desc">User-level risk scoring with gamified awareness platform and built-in compliance and governance reporting.</div>
+      </div>
+    </div>
+
+    <div class="partner-card">
+      <div class="partner-logo-wrap">
+        <img src="https://logo.clearbit.com/tenable.com" alt="Tenable" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+        <div class="partner-wordmark" style="display:none;color:#00b388;">Tenable</div>
+      </div>
+      <div class="partner-body">
+        <div class="partner-focus">Exposure Management · Vuln · Cloud · OT</div>
+        <div class="partner-desc">Vulnerability and cloud security across the full attack surface — with attack path analysis and cyber risk quantification.</div>
+      </div>
+    </div>
+
+    <div class="partner-card">
+      <div class="partner-logo-wrap">
+        <img src="https://logo.clearbit.com/trellix.com" alt="Trellix" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+        <div class="partner-wordmark" style="display:none;color:#c8102e;">Trellix</div>
+      </div>
+      <div class="partner-body">
+        <div class="partner-focus">XDR · Endpoint · Network · Email · Data</div>
+        <div class="partner-desc">GenAI-powered platform combining endpoint, network, email, and data security with Managed Detection and Response.</div>
+      </div>
+    </div>
+
+    <div class="partner-card">
+      <div class="partner-logo-wrap">
+        <img src="https://logo.clearbit.com/cybercyte.com" alt="CyberCyte" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+        <div class="partner-wordmark" style="display:none;color:#0057b8;">CyberCyte</div>
+      </div>
+      <div class="partner-body">
+        <div class="partner-focus">Exposure Management · GRC · Threat Intel</div>
+        <div class="partner-desc">X-CTEM platform consolidating threat exposure management and GRC with continuous monitoring in one unified view.</div>
+      </div>
+    </div>
+
+    <div class="partner-card">
+      <div class="partner-logo-wrap">
+        <img src="https://logo.clearbit.com/derscanner.com" alt="DerScanner" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+        <div class="partner-wordmark" style="display:none;color:#0d47a1;">DerScanner</div>
+      </div>
+      <div class="partner-body">
+        <div class="partner-focus">SAST · DAST · SCA · Mobile App Security</div>
+        <div class="partner-desc">Full-cycle application security testing across the development lifecycle with PCI DSS and HIPAA compliance coverage.</div>
+      </div>
+    </div>
+
+    <div class="partner-card">
+      <div class="partner-logo-wrap">
+        <img src="https://logo.clearbit.com/lastpass.com" alt="LastPass" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+        <div class="partner-wordmark" style="display:none;color:#d4271c;">LastPass</div>
+      </div>
+      <div class="partner-body">
+        <div class="partner-focus">Password Management · SSO · Adaptive MFA</div>
+        <div class="partner-desc">Zero-knowledge encryption for enterprise credential management with dark web monitoring for compromised credentials.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="section-label">Get Started</div>
+  <h2>Know Your Risk. Build Your Resilience.</h2>
+  <p>Start with a complimentary cyber risk assessment. We map your current state, identify your highest-priority gaps, and propose a practical path forward — no obligation, no jargon.</p>
+  <div class="cta-actions">
+    <a class="btn-primary" href="https://digitalresilience.co.za" target="_blank">Visit Our Website</a>
+    <a class="btn-outline" style="border-color:rgba(255,255,255,0.2);color:#94a3b8;" href="mailto:info@digitalresilience.co.za">Request an Assessment</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logos">
+    <img class="f-dr" src="Digital Resilience Logo.png" alt="Digital Resilience" />
+    <div class="footer-div"></div>
+    <img class="f-dsg" src="DSG_Logo_RED.png" alt="Digital Solutions Group" />
+  </div>
+  <p>South Africa's leading cyber resilience partner — <a href="https://digitalresilience.co.za" target="_blank">digitalresilience.co.za</a></p>
+  <p class="footer-dsg">A division of Digital Solutions Group (DSG) · Johannesburg, South Africa · © 2026 Digital Resilience. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
